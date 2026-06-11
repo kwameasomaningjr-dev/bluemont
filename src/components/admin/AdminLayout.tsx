@@ -5,7 +5,6 @@ import {
   LogOut, 
   Menu, 
   X, 
-  User,
   Bell
 } from 'lucide-react'
 import { useState } from 'react'

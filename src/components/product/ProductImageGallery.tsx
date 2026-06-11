@@ -1,4 +1,3 @@
-import { useState } from 'react'
 
 interface ProductImageGalleryProps {
   images: string[]
@@ -6,8 +5,7 @@ interface ProductImageGalleryProps {
   sku: string
 }
 
-export function ProductImageGallery({ images, alt, sku }: ProductImageGalleryProps) {
-  const [active, setActive] = useState(0)
+export function ProductImageGallery({ alt, sku }: ProductImageGalleryProps) {
   const customImage = localStorage.getItem(`bluemont_custom_image_${sku}`)
 
   return (
