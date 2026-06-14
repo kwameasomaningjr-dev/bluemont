@@ -1,5 +1,4 @@
 import type { Brand } from '../types'
-import { placeholderImage } from '../lib/utils'
 
 export const brands: Brand[] = [
   {

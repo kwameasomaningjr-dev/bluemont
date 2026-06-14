@@ -1,11 +1,9 @@
 import { Link } from 'react-router-dom'
 import { ArrowRight, CheckCircle2 } from 'lucide-react'
-import { useProductStore } from '../../store/productStore'
 import { brands } from '../../data/brands'
 import { ROUTES } from '../../constants/routes'
 
 export function BrandShowcaseCards() {
-  const products = useProductStore((state) => state.products)
   const donaldson = brands.find(b => b.slug === 'donaldson')!
   const others = brands.filter(b => b.slug !== 'donaldson')
 
@@ -74,7 +72,6 @@ export function BrandShowcaseCards() {
       {/* Secondary Brands Grid */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
         {others.map((brand) => {
-          const count = products.filter((p) => p.brand === brand.slug).length
           return (
             <div
               key={brand.slug}

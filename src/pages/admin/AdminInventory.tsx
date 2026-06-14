@@ -1,6 +1,5 @@
 import { useState, useMemo, useRef } from 'react'
 import { useProductStore } from '../../store/productStore'
-import { useCurrencyStore } from '../../store/currencyStore'
 import { useUIStore } from '../../store/uiStore'
 import { 
   Search, 
@@ -22,7 +21,6 @@ export default function AdminInventory() {
   const addProduct = useProductStore((state) => state.addProduct)
   const updateProduct = useProductStore((state) => state.updateProduct)
   const deleteProduct = useProductStore((state) => state.deleteProduct)
-  const rate = useCurrencyStore((state) => state.eurToGhsRate)
 
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedBrand, setSelectedBrand] = useState('all')
