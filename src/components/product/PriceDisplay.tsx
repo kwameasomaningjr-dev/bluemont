@@ -1,4 +1,4 @@
-import { formatGHS } from '../../lib/utils'
+import { useCurrencyStore } from '../../store/currencyStore'
 import type { Product } from '../../types'
 
 interface PriceDisplayProps {
@@ -7,6 +7,8 @@ interface PriceDisplayProps {
 }
 
 export function PriceDisplay({ product, size = 'card' }: PriceDisplayProps) {
+  const formatGHS = useCurrencyStore((state) => state.formatGHS)
+
   if (!product.buyNowEnabled && product.quoteEnabled) {
     return <span className="text-sm font-semibold text-brand-donaldson">Contact for Price</span>
   }

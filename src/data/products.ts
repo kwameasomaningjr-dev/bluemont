@@ -582,7 +582,7 @@ export const products: Product[] = [
       'Engineered for long-haul trucks, heavy generators and earthmoving machinery, the EuroTRUCK 200Ah 12V battery delivers maximum reserve capacity and robust cranking power for the toughest operating environments.',
     price: 2640.0,
     stockStatus: 'in_stock',
-    buyNowEnabled: false,
+    buyNowEnabled: true,
     quoteEnabled: true,
     isFeatured: false,
     images: ['placeholder'],

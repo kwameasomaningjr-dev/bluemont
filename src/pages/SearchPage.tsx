@@ -1,11 +1,12 @@
 import { useMemo, useState, type ChangeEvent, type FormEvent } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { Search as SearchIcon } from 'lucide-react'
-import { products } from '../data/products'
+import { useProductStore } from '../store/productStore'
 import { SectionHeading } from '../components/utility/SectionHeading'
 import { ProductGrid } from '../components/product/ProductGrid'
 
 export default function SearchPage() {
+  const products = useProductStore((state) => state.products)
   const [searchParams, setSearchParams] = useSearchParams()
   const initialQuery = searchParams.get('q') ?? ''
   const [query, setQuery] = useState(initialQuery)
@@ -16,7 +17,7 @@ export default function SearchPage() {
     return products.filter((p) =>
       [p.name, p.shortDescription, p.sku, p.category, ...p.tags].join(' ').toLowerCase().includes(term),
     )
-  }, [initialQuery])
+  }, [initialQuery, products])
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)
 

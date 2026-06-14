@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom'
 import { Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react'
 import { useCartStore } from '../store/cartStore'
+import { useCurrencyStore } from '../store/currencyStore'
 import { ROUTES } from '../constants/routes'
-import { formatGHS, placeholderImage } from '../lib/utils'
 import { SectionHeading } from '../components/utility/SectionHeading'
 import { EmptyState } from '../components/utility/EmptyState'
 import { BrandBadge } from '../components/product/BrandBadge'
@@ -12,6 +12,7 @@ export default function CartPage() {
   const updateQty = useCartStore((state) => state.updateQty)
   const removeItem = useCartStore((state) => state.removeItem)
   const subtotal = useCartStore((state) => state.subtotal())
+  const formatGHS = useCurrencyStore((state) => state.formatGHS)
 
   if (!items.length) {
     return (
@@ -48,11 +49,14 @@ export default function CartPage() {
               className="flex flex-col gap-4 rounded-2xl border border-neutral-border bg-neutral-surface p-4 sm:flex-row sm:items-center"
             >
               <Link to={ROUTES.product(product.slug)} className="shrink-0">
-                <img
-                  src={product.images[0] ?? placeholderImage(product.slug)}
-                  alt={product.name}
-                  className="h-24 w-24 rounded-xl object-cover"
-                />
+                <div className="flex h-24 w-24 flex-col items-center justify-center rounded-xl bg-neutral-bg p-3 text-center border border-neutral-border">
+                  <span className="font-display text-xs font-bold text-neutral-text leading-tight truncate w-full">
+                    {product.name.split(' ').slice(-1)}
+                  </span>
+                  <span className="font-mono text-[9px] text-neutral-muted mt-1 truncate w-full">
+                    {product.sku}
+                  </span>
+                </div>
               </Link>
 
               <div className="min-w-0 flex-1">

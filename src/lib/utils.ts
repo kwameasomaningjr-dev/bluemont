@@ -5,8 +5,9 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function formatGHS(price: number): string {
-  return `GHS ${price.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+export function formatGHS(priceInEur: number, rate = 1): string {
+  const converted = priceInEur * rate
+  return `GHS ${converted.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
 }
 
 export function slugify(value: string): string {

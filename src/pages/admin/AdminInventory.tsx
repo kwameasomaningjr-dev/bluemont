@@ -1,5 +1,6 @@
 import { useState, useMemo, useRef } from 'react'
-import { products } from '../../data/products'
+import { useProductStore } from '../../store/productStore'
+import { useCurrencyStore } from '../../store/currencyStore'
 import { useUIStore } from '../../store/uiStore'
 import { 
   Search, 
@@ -13,16 +14,35 @@ import {
   Save
 } from 'lucide-react'
 import type { Product } from '../../types'
+import { slugify } from '../../lib/utils'
 
 export default function AdminInventory() {
   const addToast = useUIStore((state) => state.addToast)
+  const products = useProductStore((state) => state.products)
+  const addProduct = useProductStore((state) => state.addProduct)
+  const updateProduct = useProductStore((state) => state.updateProduct)
+  const deleteProduct = useProductStore((state) => state.deleteProduct)
+  const rate = useCurrencyStore((state) => state.eurToGhsRate)
+
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedBrand, setSelectedBrand] = useState('all')
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [activeSku, setActiveSku] = useState<string | null>(null)
   
-  // Edit Modal State
+  // Modal States
   const [editingProduct, setEditingProduct] = useState<Product | null>(null)
+  const [isAdding, setIsAdding] = useState(false)
+  const [newProduct, setNewProduct] = useState<Partial<Product>>({
+    brand: 'donaldson',
+    category: 'air-filters',
+    price: 0,
+    stockStatus: 'in_stock',
+    buyNowEnabled: true,
+    quoteEnabled: true,
+    images: ['placeholder'],
+    specs: {},
+    tags: []
+  })
 
   const filteredProducts = useMemo(() => {
     return products.filter(p => {
@@ -31,24 +51,60 @@ export default function AdminInventory() {
       const matchesBrand = selectedBrand === 'all' || p.brand === selectedBrand
       return matchesSearch && matchesBrand
     })
-  }, [searchTerm, selectedBrand])
-
-  const handleAction = (action: string, productName: string) => {
-    addToast({
-      id: Date.now().toString(),
-      type: 'info',
-      message: `${action} product: ${productName}... (Demo Mode)`,
-    })
-  }
+  }, [products, searchTerm, selectedBrand])
 
   const handleSaveEdit = (e: React.FormEvent) => {
     e.preventDefault()
+    if (editingProduct) {
+      updateProduct(editingProduct)
+      addToast({
+        id: Date.now().toString(),
+        type: 'success',
+        message: `Changes saved successfully for ${editingProduct.sku}.`,
+      })
+      setEditingProduct(null)
+    }
+  }
+
+  const handleAddNew = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!newProduct.name || !newProduct.sku) {
+      addToast({ id: 'err', type: 'error', message: 'Name and SKU are required' })
+      return
+    }
+
+    const productToAdd: Product = {
+      ...newProduct as Product,
+      id: `prod-${Date.now()}`,
+      slug: slugify(newProduct.name),
+      isFeatured: false,
+    }
+
+    addProduct(productToAdd)
     addToast({
       id: Date.now().toString(),
       type: 'success',
-      message: `Changes saved successfully for ${editingProduct?.sku}. Storefront updated.`,
+      message: `Product ${productToAdd.sku} added successfully.`,
     })
-    setEditingProduct(null)
+    setIsAdding(false)
+    setNewProduct({
+      brand: 'donaldson',
+      category: 'air-filters',
+      price: 0,
+      stockStatus: 'in_stock',
+      buyNowEnabled: true,
+      quoteEnabled: true,
+      images: ['placeholder'],
+      specs: {},
+      tags: []
+    })
+  }
+
+  const handleDelete = (id: string, name: string) => {
+    if (window.confirm(`Are you sure you want to delete ${name}?`)) {
+      deleteProduct(id)
+      addToast({ id: 'del', type: 'info', message: 'Product removed.' })
+    }
   }
 
   const triggerUpload = (sku: string) => {
@@ -67,7 +123,7 @@ export default function AdminInventory() {
       addToast({
         id: Date.now().toString(),
         type: 'success',
-        message: `Image uploaded successfully for SKU ${activeSku}. Refreshing storefront...`,
+        message: `Image uploaded successfully for SKU ${activeSku}.`,
       })
       setActiveSku(null)
       if (fileInputRef.current) fileInputRef.current.value = ''
@@ -88,10 +144,10 @@ export default function AdminInventory() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="font-display text-2xl font-bold text-neutral-text">Product Inventory</h1>
-          <p className="mt-1 text-sm text-neutral-muted">Update pricing, stock levels, and product details.</p>
+          <p className="mt-1 text-sm text-neutral-muted">Update pricing (EUR), stock levels, and product details.</p>
         </div>
         <button 
-          onClick={() => handleAction('Adding new', 'New Product')}
+          onClick={() => setIsAdding(true)}
           className="flex items-center justify-center gap-2 rounded-xl bg-brand-donaldson px-5 py-2.5 text-sm font-bold text-white shadow-md shadow-brand-donaldson/20 transition-transform hover:scale-[1.02] active:scale-[0.98]"
         >
           <Plus size={18} />
@@ -134,7 +190,7 @@ export default function AdminInventory() {
               <tr>
                 <th className="px-6 py-4">Product / SKU</th>
                 <th className="px-6 py-4">Brand</th>
-                <th className="px-6 py-4">Price (GHC)</th>
+                <th className="px-6 py-4">Price (EUR)</th>
                 <th className="px-6 py-4">Stock Status</th>
                 <th className="px-6 py-4 text-right">Actions</th>
               </tr>
@@ -159,7 +215,7 @@ export default function AdminInventory() {
                   </td>
                   <td className="px-6 py-4">
                     <span className="text-sm font-semibold text-neutral-text">
-                      {product.price.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                      €{product.price.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                     </span>
                   </td>
                   <td className="px-6 py-4">
@@ -193,7 +249,7 @@ export default function AdminInventory() {
                         <Edit2 size={16} />
                       </button>
                       <button 
-                        onClick={() => handleAction('Deleting', product.name)}
+                        onClick={() => handleDelete(product.id, product.name)}
                         title="Delete Product"
                         className="rounded-lg p-2 text-neutral-muted hover:bg-neutral-bg hover:text-status-danger transition-colors"
                       >
@@ -218,10 +274,6 @@ export default function AdminInventory() {
           <p className="text-xs text-neutral-muted">
             Showing <span className="font-bold">{filteredProducts.length}</span> of <span className="font-bold">{products.length}</span> products
           </p>
-          <div className="flex gap-4 text-xs font-bold text-brand-donaldson uppercase tracking-widest">
-            <button onClick={() => handleAction('Paging', 'Previous Page')} className="hover:underline">Prev</button>
-            <button onClick={() => handleAction('Paging', 'Next Page')} className="hover:underline">Next</button>
-          </div>
         </div>
       </div>
 
@@ -243,19 +295,22 @@ export default function AdminInventory() {
                   <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-neutral-muted">SKU / Part Number</label>
                   <input 
                     type="text" 
-                    disabled 
                     value={editingProduct.sku}
-                    className="w-full rounded-xl border border-neutral-border bg-neutral-bg px-4 py-2.5 text-sm text-neutral-muted cursor-not-allowed"
+                    onChange={(e) => setEditingProduct({...editingProduct, sku: e.target.value})}
+                    className="w-full rounded-xl border border-neutral-border bg-neutral-bg px-4 py-2.5 text-sm text-neutral-text outline-none focus:border-brand-donaldson"
                   />
                 </div>
                 <div>
                   <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-neutral-muted">Brand</label>
-                  <input 
-                    type="text" 
-                    disabled 
+                  <select 
                     value={editingProduct.brand}
-                    className="w-full rounded-xl border border-neutral-border bg-neutral-bg px-4 py-2.5 text-sm text-neutral-muted cursor-not-allowed uppercase"
-                  />
+                    onChange={(e) => setEditingProduct({...editingProduct, brand: e.target.value as any})}
+                    className="w-full rounded-xl border border-neutral-border bg-neutral-bg px-4 py-2.5 text-sm text-neutral-text outline-none focus:border-brand-donaldson"
+                  >
+                    <option value="donaldson">Donaldson</option>
+                    <option value="yuko">Yuko</option>
+                    <option value="eurocar">Eurocar</option>
+                  </select>
                 </div>
               </div>
 
@@ -271,7 +326,7 @@ export default function AdminInventory() {
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-neutral-muted">Price (GHC)</label>
+                  <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-neutral-muted">Price (EUR)</label>
                   <input 
                     type="number" 
                     step="0.01"
@@ -294,6 +349,27 @@ export default function AdminInventory() {
                 </div>
               </div>
 
+              <div className="flex items-center gap-6 py-2">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input 
+                    type="checkbox"
+                    checked={editingProduct.buyNowEnabled}
+                    onChange={(e) => setEditingProduct({...editingProduct, buyNowEnabled: e.target.checked})}
+                    className="rounded border-neutral-border text-brand-donaldson focus:ring-brand-donaldson"
+                  />
+                  <span className="text-xs font-bold uppercase tracking-wider text-neutral-text">Enable Buy Now</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input 
+                    type="checkbox"
+                    checked={editingProduct.quoteEnabled}
+                    onChange={(e) => setEditingProduct({...editingProduct, quoteEnabled: e.target.checked})}
+                    className="rounded border-neutral-border text-brand-donaldson focus:ring-brand-donaldson"
+                  />
+                  <span className="text-xs font-bold uppercase tracking-wider text-neutral-text">Enable Quotes</span>
+                </label>
+              </div>
+
               <div className="flex gap-3 pt-4">
                 <button 
                   type="button"
@@ -308,6 +384,102 @@ export default function AdminInventory() {
                 >
                   <Save size={18} />
                   Save Changes
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Add Modal */}
+      {isAdding && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setIsAdding(false)} />
+          <div className="relative w-full max-w-lg rounded-3xl bg-neutral-surface shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+            <div className="flex items-center justify-between border-b border-neutral-border px-6 py-4">
+              <h2 className="font-display text-xl font-bold text-neutral-text">Add New Product</h2>
+              <button onClick={() => setIsAdding(false)} className="rounded-lg p-2 text-neutral-muted hover:bg-neutral-bg transition-colors">
+                <X size={20} />
+              </button>
+            </div>
+            
+            <form onSubmit={handleAddNew} className="p-6 space-y-4">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-neutral-muted">SKU / Part Number</label>
+                  <input 
+                    type="text" 
+                    placeholder="e.g. P181057"
+                    value={newProduct.sku || ''}
+                    onChange={(e) => setNewProduct({...newProduct, sku: e.target.value})}
+                    className="w-full rounded-xl border border-neutral-border bg-neutral-bg px-4 py-2.5 text-sm text-neutral-text outline-none focus:border-brand-donaldson"
+                  />
+                </div>
+                <div>
+                  <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-neutral-muted">Brand</label>
+                  <select 
+                    value={newProduct.brand}
+                    onChange={(e) => setNewProduct({...newProduct, brand: e.target.value as any})}
+                    className="w-full rounded-xl border border-neutral-border bg-neutral-bg px-4 py-2.5 text-sm text-neutral-text outline-none focus:border-brand-donaldson"
+                  >
+                    <option value="donaldson">Donaldson</option>
+                    <option value="yuko">Yuko</option>
+                    <option value="eurocar">Eurocar</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-neutral-muted">Product Name</label>
+                <input 
+                  type="text" 
+                  placeholder="e.g. Donaldson Air Filter"
+                  value={newProduct.name || ''}
+                  onChange={(e) => setNewProduct({...newProduct, name: e.target.value})}
+                  className="w-full rounded-xl border border-neutral-border bg-neutral-bg px-4 py-2.5 text-sm text-neutral-text outline-none focus:border-brand-donaldson"
+                />
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-neutral-muted">Price (EUR)</label>
+                  <input 
+                    type="number" 
+                    step="0.01"
+                    placeholder="0.00"
+                    value={newProduct.price || ''}
+                    onChange={(e) => setNewProduct({...newProduct, price: parseFloat(e.target.value)})}
+                    className="w-full rounded-xl border border-neutral-border bg-neutral-bg px-4 py-2.5 text-sm text-neutral-text outline-none focus:border-brand-donaldson"
+                  />
+                </div>
+                <div>
+                  <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-neutral-muted">Stock Status</label>
+                  <select 
+                    value={newProduct.stockStatus}
+                    onChange={(e) => setNewProduct({...newProduct, stockStatus: e.target.value as any})}
+                    className="w-full rounded-xl border border-neutral-border bg-neutral-bg px-4 py-2.5 text-sm text-neutral-text outline-none focus:border-brand-donaldson"
+                  >
+                    <option value="in_stock">In Stock</option>
+                    <option value="low_stock">Low Stock</option>
+                    <option value="out_of_stock">Out of Stock</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex gap-3 pt-4">
+                <button 
+                  type="button"
+                  onClick={() => setIsAdding(false)}
+                  className="flex-1 rounded-full border border-neutral-border px-6 py-3 text-sm font-bold text-neutral-text transition hover:bg-neutral-bg"
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="submit"
+                  className="flex-1 flex items-center justify-center gap-2 rounded-full bg-brand-donaldson px-6 py-3 text-sm font-bold text-white transition hover:bg-brand-donaldson/90 shadow-lg shadow-brand-donaldson/20"
+                >
+                  <Plus size={18} />
+                  Add Product
                 </button>
               </div>
             </form>

@@ -11,3 +11,12 @@
     @apply font-display;
   }
 }
+
+@keyframes ken-burns {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.1);
+  }
+}

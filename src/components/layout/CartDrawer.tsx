@@ -2,8 +2,8 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { Minus, Plus, ShoppingCart, X } from 'lucide-react'
 import { useCartStore } from '../../store/cartStore'
+import { useCurrencyStore } from '../../store/currencyStore'
 import { ROUTES } from '../../constants/routes'
-import { formatGHS } from '../../lib/utils'
 import { BrandBadge } from '../product/BrandBadge'
 
 export default function CartDrawer() {
@@ -13,6 +13,7 @@ export default function CartDrawer() {
   const updateQty = useCartStore((s) => s.updateQty)
   const removeItem = useCartStore((s) => s.removeItem)
   const subtotal = useCartStore((s) => s.subtotal())
+  const formatGHS = useCurrencyStore((s) => s.formatGHS)
 
   return (
     <AnimatePresence>
@@ -62,11 +63,14 @@ export default function CartDrawer() {
                 <ul className="flex-1 divide-y divide-neutral-border overflow-y-auto px-5">
                   {items.map(({ product, qty }) => (
                     <li key={product.id} className="flex gap-3 py-4">
-                      <img
-                        src={product.images[0]}
-                        alt={product.name}
-                        className="h-20 w-20 shrink-0 rounded-lg object-cover"
-                      />
+                      <div className="flex h-20 w-20 shrink-0 flex-col items-center justify-center rounded-lg bg-neutral-bg p-2 text-center border border-neutral-border">
+                        <span className="font-display text-[10px] font-bold text-neutral-text leading-tight truncate w-full">
+                          {product.name.split(' ').slice(-1)}
+                        </span>
+                        <span className="font-mono text-[8px] text-neutral-muted mt-1 truncate w-full">
+                          {product.sku}
+                        </span>
+                      </div>
                       <div className="flex flex-1 flex-col gap-1">
                         <div className="flex items-start justify-between gap-2">
                           <div>

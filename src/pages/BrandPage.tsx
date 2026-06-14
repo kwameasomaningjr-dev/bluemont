@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { brands } from '../data/brands'
 import { categories } from '../data/categories'
-import { products } from '../data/products'
+import { useProductStore } from '../store/productStore'
 import type { BrandSlug } from '../types'
 import { BrandHero } from '../components/marketing/BrandHero'
 import { BrandCategoryNav } from '../components/marketing/BrandCategoryNav'
@@ -12,11 +12,12 @@ interface BrandPageProps {
 }
 
 export default function BrandPage({ brand }: BrandPageProps) {
+  const products = useProductStore((state) => state.products)
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
 
   const brandData = brands.find((b) => b.slug === brand)!
   const brandCategories = categories.filter((c) => c.brand === brand)
-  const brandProducts = useMemo(() => products.filter((p) => p.brand === brand), [brand])
+  const brandProducts = useMemo(() => products.filter((p) => p.brand === brand), [brand, products])
 
   const filtered = activeCategory ? brandProducts.filter((p) => p.category === activeCategory) : brandProducts
 

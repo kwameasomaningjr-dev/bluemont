@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Navigate, useParams } from 'react-router-dom'
-import { products } from '../data/products'
+import { useProductStore } from '../store/productStore'
 import { categories } from '../data/categories'
 import { ROUTES } from '../constants/routes'
 import { BrandBadge } from '../components/product/BrandBadge'
@@ -17,6 +17,7 @@ const tabs = ['Description', 'Specifications', 'Compatibility', 'Warranty'] as c
 type Tab = (typeof tabs)[number]
 
 export default function ProductDetailPage() {
+  const products = useProductStore((state) => state.products)
   const { slug } = useParams()
   const [activeTab, setActiveTab] = useState<Tab>('Description')
 

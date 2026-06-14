@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom'
-import { products } from '../../data/products'
+import { useProductStore } from '../../store/productStore'
 import { ROUTES } from '../../constants/routes'
 import { ProductGrid } from '../product/ProductGrid'
 import { SectionHeading } from '../utility/SectionHeading'
 
 export function FeaturedProducts() {
+  const products = useProductStore((state) => state.products)
   const featured = products.filter((p) => p.isFeatured).slice(0, 6)
 
   return (

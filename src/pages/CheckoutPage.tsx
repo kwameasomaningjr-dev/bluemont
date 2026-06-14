@@ -2,9 +2,9 @@ import { useState, type ChangeEvent, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Check, ChevronLeft } from 'lucide-react'
 import { useCartStore } from '../store/cartStore'
+import { useCurrencyStore } from '../store/currencyStore'
 import { GHANA_REGIONS } from '../constants/ghana'
 import { ROUTES } from '../constants/routes'
-import { formatGHS } from '../lib/utils'
 import { SectionHeading } from '../components/utility/SectionHeading'
 
 type Step = 1 | 2 | 3
@@ -36,13 +36,14 @@ export default function CheckoutPage() {
   const items = useCartStore((state) => state.items)
   const subtotal = useCartStore((state) => state.subtotal())
   const clearCart = useCartStore((state) => state.clearCart)
+  const formatGHS = useCurrencyStore((state) => state.formatGHS)
 
   const [step, setStep] = useState<Step>(1)
   const [info, setInfo] = useState<DeliveryInfo>(emptyInfo)
   const [paymentMethod, setPaymentMethod] = useState<'mobile_money' | 'cash_on_delivery'>('mobile_money')
   const [submitting, setSubmitting] = useState(false)
 
-  const deliveryFee = subtotal > 0 ? 50 : 0
+  const deliveryFee = subtotal > 0 ? 3 : 0
   const total = subtotal + deliveryFee
 
   if (!items.length && !submitting) {

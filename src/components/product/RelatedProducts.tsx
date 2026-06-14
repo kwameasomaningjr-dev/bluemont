@@ -1,4 +1,4 @@
-import { products } from '../../data/products'
+import { useProductStore } from '../../store/productStore'
 import type { Product } from '../../types'
 import { ProductCard } from './ProductCard'
 
@@ -7,6 +7,7 @@ interface RelatedProductsProps {
 }
 
 export function RelatedProducts({ product }: RelatedProductsProps) {
+  const products = useProductStore((state) => state.products)
   const related = products
     .filter(
       (p) =>

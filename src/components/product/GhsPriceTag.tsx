@@ -1,4 +1,4 @@
-import { formatGHS } from '../../lib/utils'
+import { useCurrencyStore } from '../../store/currencyStore'
 
 const sizeStyles = {
   card: 'text-base font-semibold',
@@ -7,11 +7,16 @@ const sizeStyles = {
 } as const
 
 interface GhsPriceTagProps {
-  price: number
+  price: number // Base price in EUR
   size?: keyof typeof sizeStyles
   className?: string
 }
 
 export function GhsPriceTag({ price, size = 'card', className = '' }: GhsPriceTagProps) {
-  return <span className={`font-mono text-neutral-text ${sizeStyles[size]} ${className}`}>{formatGHS(price)}</span>
+  const formatGHS = useCurrencyStore((state) => state.formatGHS)
+  return (
+    <span className={`font-mono text-neutral-text ${sizeStyles[size]} ${className}`}>
+      {formatGHS(price)}
+    </span>
+  )
 }

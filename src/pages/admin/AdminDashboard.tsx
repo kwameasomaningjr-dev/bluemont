@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { products } from '../../data/products'
+import { useProductStore } from '../../store/productStore'
 import { useUIStore } from '../../store/uiStore'
 import { 
   Package, 
@@ -11,6 +11,7 @@ import {
 } from 'lucide-react'
 
 export default function AdminDashboard() {
+  const products = useProductStore((state) => state.products)
   const addToast = useUIStore((state) => state.addToast)
 
   const handleReviewReport = () => {

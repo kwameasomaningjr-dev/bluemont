@@ -1,4 +1,6 @@
+import { useEffect } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { useCurrencyStore } from './store/currencyStore'
 import Layout from './components/layout/Layout'
 import LandingPage from './pages/LandingPage'
 import HomePage from './pages/HomePage'
@@ -26,6 +28,12 @@ import AdminDashboard from './pages/admin/AdminDashboard'
 import AdminInventory from './pages/admin/AdminInventory'
 
 function App() {
+  const fetchRate = useCurrencyStore((state) => state.fetchRate)
+
+  useEffect(() => {
+    fetchRate()
+  }, [fetchRate])
+
   return (
     <BrowserRouter>
       <Routes>
