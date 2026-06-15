@@ -1,9 +1,9 @@
 import { Navigate, Link } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 import { useAuthStore } from '../store/authStore'
+import { useCurrencyStore } from '../store/currencyStore'
 import { mockOrders } from '../data/mockOrders'
 import { ROUTES } from '../constants/routes'
-import { formatGHS } from '../lib/utils'
 import { SectionHeading } from '../components/utility/SectionHeading'
 import { BrandBadge } from '../components/product/BrandBadge'
 
@@ -15,6 +15,7 @@ const STATUS_STYLES: Record<string, string> = {
 
 export default function AccountOrdersPage() {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
+  const formatGHS = useCurrencyStore((state) => state.formatGHS)
 
   if (!isLoggedIn) {
     return <Navigate to={ROUTES.login} replace />

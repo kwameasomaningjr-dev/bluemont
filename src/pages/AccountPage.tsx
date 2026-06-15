@@ -1,9 +1,9 @@
 import { Navigate, Link } from 'react-router-dom'
 import { LogOut, Package, User } from 'lucide-react'
 import { useAuthStore } from '../store/authStore'
+import { useCurrencyStore } from '../store/currencyStore'
 import { mockOrders } from '../data/mockOrders'
 import { ROUTES } from '../constants/routes'
-import { formatGHS } from '../lib/utils'
 import { SectionHeading } from '../components/utility/SectionHeading'
 
 const STATUS_STYLES: Record<string, string> = {
@@ -16,6 +16,7 @@ export default function AccountPage() {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
   const user = useAuthStore((state) => state.user)
   const logout = useAuthStore((state) => state.logout)
+  const formatGHS = useCurrencyStore((state) => state.formatGHS)
 
   if (!isLoggedIn || !user) {
     return <Navigate to={ROUTES.login} replace />

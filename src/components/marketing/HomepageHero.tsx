@@ -15,8 +15,8 @@ const word = {
   show: { opacity: 1, y: 0 },
 }
 
-const staticHeadline = ["Your", 'Premier', 'Partner', 'for', 'Genuine', 'Donaldson', 'Filtration']
-const staticTagline = "Authorised distributor of Donaldson's industry-leading filtration solutions. Engineered for maximum engine protection and fleet performance."
+const staticHeadline = ["The", "Gold", "Standard", "in", "Filtration", "Technology"]
+const staticTagline = "Authorised distributor of Donaldson Filtration Solutions. Engineered for Gas Turbines and critical industrial systems. Built for total protection and maximum performance."
 
 export function HomepageHero() {
   const [index, setIndex] = useState(0)

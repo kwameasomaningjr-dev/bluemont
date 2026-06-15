@@ -26,8 +26,6 @@ export default function BrandPage({ brand }: BrandPageProps) {
       <BrandHero brand={brandData} productCount={brandProducts.length} />
 
       <div className="mx-auto max-w-content px-4 py-10 lg:px-6">
-        <p className="max-w-3xl text-sm leading-relaxed text-neutral-muted sm:text-base">{brandData.description}</p>
-
         <div className="mt-8">
           <BrandCategoryNav
             categories={brandCategories}

@@ -1,12 +1,13 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ShoppingCart } from 'lucide-react'
+import { MessageCircle, ShoppingCart } from 'lucide-react'
 import { ROUTES } from '../../constants/routes'
 import type { Product } from '../../types'
 import { BrandBadge } from './BrandBadge'
 import { StockChip } from './StockChip'
 import { PriceDisplay } from './PriceDisplay'
 import { useCartStore } from '../../store/cartStore'
+import { useNavigate } from 'react-router-dom'
 
 interface ProductCardProps {
   product: Product
@@ -15,12 +16,19 @@ interface ProductCardProps {
 export function ProductCard({ product }: ProductCardProps) {
   const addItem = useCartStore((state) => state.addItem)
   const openCart = useCartStore((state) => state.openCart)
+  const navigate = useNavigate()
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
     addItem(product, 1)
     openCart()
+  }
+
+  const handleRequestQuote = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    navigate(`${ROUTES.quote}?product=${product.slug}`)
   }
 
   return (
@@ -51,13 +59,24 @@ export function ProductCard({ product }: ProductCardProps) {
           <p className="font-mono text-xs text-neutral-muted">{product.sku}</p>
           <div className="mt-auto flex items-center justify-between pt-2">
             <PriceDisplay product={product} />
-            <button
-              onClick={handleAddToCart}
-              className="rounded-lg bg-[#1A3A6B] p-2 text-white transition hover:bg-[#1A3A6B]/90"
-              title="Add to Cart"
-            >
-              <ShoppingCart size={18} />
-            </button>
+            {product.buyNowEnabled ? (
+              <button
+                onClick={handleAddToCart}
+                className="rounded-lg bg-[#1A3A6B] p-2 text-white transition hover:bg-[#1A3A6B]/90"
+                title="Add to Cart"
+              >
+                <ShoppingCart size={18} />
+              </button>
+            ) : product.quoteEnabled ? (
+              <button
+                onClick={handleRequestQuote}
+                className="inline-flex items-center gap-1.5 rounded-lg bg-brand-donaldson px-3 py-2 text-xs font-semibold text-white transition hover:bg-brand-donaldson/90"
+                title="Request Quote"
+              >
+                <MessageCircle size={16} />
+                Quote
+              </button>
+            ) : null}
           </div>
         </div>
       </Link>

@@ -8,8 +8,7 @@ const brandLinks = [
   { label: 'YUKO Lubricants', to: ROUTES.brand('yuko') },
   { label: 'Eurocar Batteries', to: ROUTES.brand('eurocar') },
 ]
-
-const featuredCategories = categories.slice(0, 5)
+const featuredCategories = categories.filter((category) => category.brand === 'spare-parts')
 
 export default function Footer() {
   return (
@@ -48,7 +47,14 @@ export default function Footer() {
               </li>
             ))}
           </ul>
+          
+          <h3 className="mt-8 font-display text-sm font-semibold uppercase tracking-wide text-neutral-text">Divisions</h3>
           <ul className="mt-4 space-y-2 text-sm">
+            <li>
+              <Link to={ROUTES.brand('spare-parts')} className="text-neutral-muted hover:text-brand-donaldson">
+                Genuine Spare Parts
+              </Link>
+            </li>
             {featuredCategories.map((category) => (
               <li key={category.slug}>
                 <Link to={`${ROUTES.products}?category=${category.slug}`} className="text-neutral-muted hover:text-brand-donaldson">

@@ -1,4 +1,4 @@
-export type BrandSlug = 'donaldson' | 'yuko' | 'eurocar'
+export type BrandSlug = 'donaldson' | 'yuko' | 'eurocar' | 'spare-parts' | 'toyota' | 'mitsubishi' | 'howo'
 
 export type StockStatus = 'in_stock' | 'low_stock' | 'out_of_stock'
 

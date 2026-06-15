@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Search, ShoppingCart, User, Menu, ChevronDown } from 'lucide-react'
+import { Search, ShoppingCart, User, Menu, ChevronDown, Globe } from 'lucide-react'
 import { useCartStore } from '../../store/cartStore'
 import { useUIStore } from '../../store/uiStore'
+import { useCurrencyStore, CURRENCIES, type CurrencyCode } from '../../store/currencyStore'
 import { ROUTES } from '../../constants/routes'
 
 const brandLinks = [
@@ -13,12 +14,16 @@ const brandLinks = [
 
 export default function Navbar() {
   const [brandMenuOpen, setBrandMenuOpen] = useState(false)
+  const [currencyMenuOpen, setCurrencyMenuOpen] = useState(false)
   const [query, setQuery] = useState('')
   const navigate = useNavigate()
 
   const itemCount = useCartStore((s) => s.itemCount())
   const openCart = useCartStore((s) => s.openCart)
   const openMobileMenu = useUIStore((s) => s.openMobileMenu)
+
+  const currentCurrency = useCurrencyStore((s) => s.currentCurrency)
+  const setCurrency = useCurrencyStore((s) => s.setCurrency)
 
   function handleSearchSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -39,7 +44,7 @@ export default function Navbar() {
           <Menu size={22} />
         </button>
 
-        <Link to={ROUTES.storefront} className="flex items-center gap-2.5 shrink-0">
+        <Link to={ROUTES.home} className="flex items-center gap-2.5 shrink-0">
           <img src="/logo.png" alt="" className="h-10 w-auto" />
           <div className="flex flex-col leading-tight">
             <span className="font-display text-lg font-bold tracking-tight text-brand-donaldson">
@@ -77,6 +82,10 @@ export default function Navbar() {
               </div>
             )}
           </div>
+          {/* Genuine Spare Parts - Elevated to Top Level */}
+          <Link to={ROUTES.brand('spare-parts')} className="text-neutral-text hover:text-brand-donaldson">
+            Genuine Spare Parts
+          </Link>
           <Link to={ROUTES.about} className="text-neutral-text hover:text-brand-donaldson">
             About
           </Link>
@@ -99,6 +108,39 @@ export default function Navbar() {
         </form>
 
         <div className="ml-auto flex items-center gap-1 lg:ml-0">
+          {/* Currency Selector */}
+          <div
+            className="relative hidden sm:block"
+            onMouseEnter={() => setCurrencyMenuOpen(true)}
+            onMouseLeave={() => setCurrencyMenuOpen(false)}
+          >
+            <button
+              type="button"
+              className="flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-semibold text-neutral-text hover:bg-neutral-bg"
+            >
+              <Globe size={18} />
+              {currentCurrency}
+            </button>
+            {currencyMenuOpen && (
+              <div className="absolute right-0 top-full w-40 rounded-lg border border-neutral-border bg-neutral-surface py-2 shadow-lg">
+                {(Object.keys(CURRENCIES) as CurrencyCode[]).map((code) => (
+                  <button
+                    key={code}
+                    onClick={() => {
+                      setCurrency(code)
+                      setCurrencyMenuOpen(false)
+                    }}
+                    className={`block w-full px-4 py-2 text-left text-sm hover:bg-neutral-bg ${
+                      currentCurrency === code ? 'font-bold text-brand-donaldson' : 'text-neutral-text'
+                    }`}
+                  >
+                    {CURRENCIES[code].symbol} {code}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
           <Link
             to={ROUTES.account}
             className="rounded-full p-2 text-neutral-text hover:bg-neutral-bg"

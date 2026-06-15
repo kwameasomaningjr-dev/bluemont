@@ -90,4 +90,41 @@ export const categories: Category[] = [
     brand: 'eurocar',
     icon: 'battery-charging',
   },
+
+  // Genuine Spare Parts
+  {
+    slug: 'fuel-injection-pumps',
+    label: 'Fuel Injection Pumps',
+    description: 'High-precision fuel injection pumps for diesel engines.',
+    brand: 'spare-parts',
+    icon: 'droplet',
+  },
+  {
+    slug: 'diesel-engines',
+    label: 'Diesel Engines',
+    description: 'Complete genuine diesel engines and major assemblies.',
+    brand: 'spare-parts',
+    icon: 'settings',
+  },
+  {
+    slug: 'hydraulic-pumps',
+    label: 'Hydraulic Pumps',
+    description: 'Heavy-duty hydraulic pumps for excavators and other equipment.',
+    brand: 'spare-parts',
+    icon: 'gauge',
+  },
+  {
+    slug: 'main-valves',
+    label: 'Main Valves',
+    description: 'Control valves and hydraulic system main components.',
+    brand: 'spare-parts',
+    icon: 'cog',
+  },
+  {
+    slug: 'tyres',
+    label: 'Tyres',
+    description: 'Passenger, SUV and truck tyres for mixed fleet use.',
+    brand: 'spare-parts',
+    icon: 'circle',
+  },
 ]

@@ -10,6 +10,7 @@ const links = [
   { label: 'Donaldson Filtration', to: ROUTES.brand('donaldson') },
   { label: 'YUKO Lubricants', to: ROUTES.brand('yuko') },
   { label: 'Eurocar Batteries', to: ROUTES.brand('eurocar') },
+  { label: 'Genuine Spare Parts', to: ROUTES.brand('spare-parts') },
   { label: 'Request a Quote', to: ROUTES.quote },
   { label: 'About', to: ROUTES.about },
   { label: 'Contact', to: ROUTES.contact },

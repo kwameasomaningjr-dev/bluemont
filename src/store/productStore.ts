@@ -60,6 +60,31 @@ export const useProductStore = create<ProductStore>()(
     }),
     {
       name: 'bluemont-products',
+      merge: (persistedState, currentState) => {
+        const persisted = persistedState as Partial<ProductStore> | undefined
+
+        if (!persisted?.products?.length) {
+          return currentState
+        }
+
+        const mergedProducts = [...currentState.products]
+
+        persisted.products.forEach((product) => {
+          const index = mergedProducts.findIndex((item) => item.sku === product.sku)
+          if (index === -1) {
+            mergedProducts.push(product)
+            return
+          }
+
+          mergedProducts[index] = { ...mergedProducts[index], ...product }
+        })
+
+        return {
+          ...currentState,
+          ...persisted,
+          products: mergedProducts,
+        }
+      },
     }
   )
 )

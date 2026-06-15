@@ -31,7 +31,7 @@ function App() {
   const fetchRate = useCurrencyStore((state) => state.fetchRate)
 
   useEffect(() => {
-    fetchRate()
+    if (fetchRate) fetchRate()
   }, [fetchRate])
 
   return (
@@ -50,6 +50,7 @@ function App() {
             <Route path="/products/donaldson" element={<BrandPage brand="donaldson" />} />
             <Route path="/products/yuko" element={<BrandPage brand="yuko" />} />
             <Route path="/products/eurocar" element={<BrandPage brand="eurocar" />} />
+            <Route path="/products/spare-parts" element={<BrandPage brand="spare-parts" />} />
             <Route path="/products/:slug" element={<ProductDetailPage />} />
             <Route path="/cart" element={<CartPage />} />
             <Route path="/checkout" element={<CheckoutPage />} />

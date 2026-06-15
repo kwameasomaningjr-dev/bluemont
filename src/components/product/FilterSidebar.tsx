@@ -2,7 +2,7 @@ import { categories } from '../../data/categories'
 import { BRAND_LABELS } from '../../constants/brands'
 import type { BrandSlug, FilterState } from '../../types'
 
-const ALL_BRANDS: BrandSlug[] = ['donaldson', 'yuko', 'eurocar']
+const ALL_BRANDS: BrandSlug[] = ['donaldson', 'yuko', 'eurocar', 'spare-parts']
 const PRICE_CEILING = 5000
 
 interface FilterSidebarProps {
