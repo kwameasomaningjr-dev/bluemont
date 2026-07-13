@@ -61,7 +61,7 @@ export function BrandShowcaseCards() {
           <div className="relative h-64 lg:h-auto lg:w-1/3 p-6 lg:p-10 flex items-center justify-center">
             <div className="absolute inset-0 bg-neutral-bg opacity-40 rounded-xl m-6 lg:m-10" />
             <img 
-              src="/donaldson.png" 
+              src="/images/donaldson.png" 
               alt="Donaldson Filtration" 
               className="relative z-10 max-h-full max-w-full object-contain drop-shadow-xl"
             />

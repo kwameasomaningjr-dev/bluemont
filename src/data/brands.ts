@@ -9,7 +9,7 @@ export const brands: Brand[] = [
       'Founded in 1915, Donaldson is a global leader in technology-led filtration, dedicated to delivering solutions that improve equipment performance and protect the environment. Renowned for over a century of innovation, Donaldson engineering is the trusted gold standard across the world’s most demanding industries. As an authorized distributor, we bring Donaldson’s premium, OEM-grade filtration technology directly to your operations, specializing in Gas Turbine Systems and critical industrial filtration.',
     colorPrimary: '#1A3A6B',
     categories: ['air-filters', 'oil-filters', 'fuel-filters', 'hydraulic-filters'],
-    heroImage: '/donaldson.png',
+    heroImage: '/images/donaldson.png',
   },
   {
     name: 'YUKO Lubricants',
@@ -19,7 +19,7 @@ export const brands: Brand[] = [
       'Established in 2002, YUKO is Ukraine\'s best-selling automotive oil brand, exported to over 80 countries. YUKO stands for "Your Unique Key Opportunity," representing a commitment to providing partners with a competitive edge. Built with a "principle of primacy," YUKO maintains one of Eastern Europe\'s most advanced blending plants and laboratories, ensuring every drop meets the highest international standards for extreme performance—even in Antarctica.',
     colorPrimary: '#B8860B',
     categories: ['engine-oils', 'gear-oils', 'hydraulic-fluids', 'greases'],
-    heroImage: '/yuko.png',
+    heroImage: '/images/yuko.png',
   },
   {
     name: 'Eurocar Batteries',
@@ -29,7 +29,7 @@ export const brands: Brand[] = [
       'Eurocar/Eurotruk is an automotive battery produced for vehicles with demand of superior starting, performance, and reliability. Adopted to resist high vibration levels and hot weather, offering excellent power, capacity, start performance, and reliability. This is a high-quality product for vehicles of every class.',
     colorPrimary: '#2D6A2D',
     categories: ['car-batteries', 'suv-batteries', 'truck-batteries', 'deep-cycle-batteries'],
-    heroImage: '/eurocar.png',
+    heroImage: '/images/eurocar.png',
   },
   {
     name: 'Genuine Spare Parts',

@@ -16,7 +16,7 @@ export default function Footer() {
       <div className="mx-auto grid max-w-content gap-10 px-4 py-12 sm:grid-cols-2 lg:grid-cols-3 lg:px-6">
         <div>
           <Link to={ROUTES.home} className="flex items-center gap-3">
-            <img src="/logo.png" alt="" className="h-14 w-auto" />
+            <img src="/images/logo.png" alt="" className="h-14 w-auto" />
             <div className="flex flex-col leading-tight">
               <span className="font-display text-2xl font-bold tracking-tight text-brand-donaldson">
                 Bluemont
